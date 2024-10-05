@@ -1,0 +1,15 @@
+
+/* You need better PrimeVue Selectors handling*/
+
+@tailwind base;
+
+@tailwind components;
+@tailwind utilities;
+
+html {
+    scroll-behavior: smooth;
+}
+
+.p-datatable-tbody > tr > td {
+    text-align: right !important;
+}
