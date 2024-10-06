@@ -1,5 +1,4 @@
-
-/* You need better PrimeVue Selectors handling*/
+@import 'primeicons/primeicons.css';
 
 @tailwind base;
 
@@ -10,6 +9,21 @@ html {
     scroll-behavior: smooth;
 }
 
-.p-datatable-tbody > tr > td {
-    text-align: right !important;
+.p-datatable-thead{
+    @apply text-xs;
+}
+
+.p-datatable-column-title, .p-datatable-tbody > tr > td  {
+    text-align: center !important;
+}
+.p-datatable-column-header-content{
+    flex-direction: column;
+}
+
+.p-datatable-popover-filter {
+    margin-left: unset !important;
+}
+
+.p-inputtext{
+    width: 100% !important;
 }

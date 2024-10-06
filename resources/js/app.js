@@ -6,9 +6,10 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import PrimeVue from 'primevue/config';
-import Lara from '@primevue/themes/lara';
+import ToastService from 'primevue/toastservice';
 import Aura from '@primevue/themes/aura';
 import {definePreset} from "@primevue/themes";
+import ConfirmationService from "primevue/confirmationservice";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -79,6 +80,8 @@ createInertiaApp({
                     }
                 }
             })
+            .use(ToastService)
+            .use(ConfirmationService)
             .mount(el);
     },
     progress: {

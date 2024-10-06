@@ -6,6 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import {$t} from "@primeuix/styled";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -17,27 +18,48 @@ const showingNavigationDropdown = ref(false);
                 class="border-b border-gray-100 bg-white"
             >
                 <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto  px-4 sm:px-6 lg:px-8">
                     <div class="flex h-16 justify-between">
                         <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
-                                </Link>
-                            </div>
-
                             <!-- Navigation Links -->
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                                class="hidden  sm:-my-px sm:ms-10 sm:gap-8 sm:flex"
                             >
                                 <NavLink
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
-                                    Dashboard
+                                    جميع المشروعات
+                                </NavLink>
+                                <NavLink
+                                    :href="route('ok-projects')"
+                                    :active="route().current('ok-projects')"
+                                >
+                                    مشروعات تامة
+                                </NavLink>
+                                <NavLink
+                                    :href="route('late-projects')"
+                                    :active="route().current('late-projects')"
+                                >
+                                    مشروعات بدون ملاحظات / متأخرة
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('create-project')"
+                                    :active="route().current('create-project')"
+                                >
+                                    إضافة مشروع
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('users.index')"
+                                    :active="route().current('users.index')"
+                                >
+                                    جميع المستخدمين
+                                </NavLink>
+                                <NavLink v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('users.create')"
+                                    :active="route().current('users.create')"
+                                >
+                                    إضافة مستخدم
                                 </NavLink>
                             </div>
                         </div>
@@ -74,14 +96,14 @@ const showingNavigationDropdown = ref(false);
                                         <DropdownLink
                                             :href="route('profile.edit')"
                                         >
-                                            Profile
+                                            الملف الشخصي
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            تسجيل الخروج
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -144,7 +166,37 @@ const showingNavigationDropdown = ref(false);
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Dashboard
+                            جميع المشروعات
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('ok-projects')"
+                            :active="route().current('ok-projects')"
+                        >
+                            مشروعات تامة
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('late-projects')"
+                            :active="route().current('late-projects')"
+                        >
+                            مشروعات بدون ملاحظات / متأخرة
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'admin'"
+                            :href="route('create-project')"
+                            :active="route().current('create-project')"
+                        >
+                            إضافة مشروع
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'admin'"
+                            :href="route('users.index')"
+                            :active="route().current('users.index')"
+                        >
+                            جميع المستخدمين
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="$page.props.auth.user.role === 'admin'"
+                            :href="route('users.create')"
+                            :active="route().current('users.create')"
+                        >
+                            إضافة مستخدم
                         </ResponsiveNavLink>
                     </div>
 
@@ -165,14 +217,14 @@ const showingNavigationDropdown = ref(false);
 
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
+                                الملف الشخصي
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
                                 method="post"
                                 as="button"
                             >
-                                Log Out
+                                تسجيل الخروج
                             </ResponsiveNavLink>
                         </div>
                     </div>
@@ -191,6 +243,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
+                <Toast/>
                 <slot />
             </main>
         </div>
