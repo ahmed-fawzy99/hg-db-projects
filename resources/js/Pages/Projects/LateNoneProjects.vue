@@ -191,7 +191,10 @@ const onFilter = (event) => {
                             </Column>
                             <Column header="مهمات" v-if="$page.props.auth.user.role === 'admin'">
                                 <template #body="{ data }">
-                                    <Link :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
+                                    <div class="flex gap-2">
+                                        <Link :href="route('show-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-eye text-primary pe-1 !text-sm" />عرض </Link>
+                                        <Link :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
+                                    </div>
                                 </template>
                             </Column>
 

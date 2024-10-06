@@ -56,10 +56,13 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Request $request)
     {
-        //
+        return Inertia::render('Projects/ProjectView', [
+            'project' => Project::findOrFail($request->id),
+        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

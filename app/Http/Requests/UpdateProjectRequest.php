@@ -27,6 +27,9 @@ class UpdateProjectRequest extends FormRequest
             'coord_unit_review_date' => 'nullable|date',
             'unit_project_approval_date' => 'nullable|date',
             'project_material_links' => 'nullable|string|url:http,https',
+            'civil_defense_notes' => 'nullable|string',
+            'architectural_notes' => 'nullable|string',
+            'electromechanical_notes' => 'nullable|string',
         ];
     }
 }

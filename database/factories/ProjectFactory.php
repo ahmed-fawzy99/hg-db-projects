@@ -41,6 +41,9 @@ class ProjectFactory extends Factory
             'coord_unit_review_date' => $this->faker->date(),
             'unit_project_approval_date' => $this->faker->date(),
             'project_material_links' => $this->faker->url(),
+            'civil_defense_notes' => 'هذا المشروع يحتاج إلى موافقة من الدفاع المدني',
+            'architectural_notes' => 'هذا المشروع يحتاج إلى موافقة من الهيئة الهندسية',
+            'electromechanical_notes' => 'هذا المشروع يحتاج إلى موافقة من الهيئة الكهربائية',
         ];
     }
 }

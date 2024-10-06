@@ -44,7 +44,10 @@ const form = useForm({
     owner_notes_delivery_after_fulfillment_date: ref(null),
     coord_unit_review_date: ref(null),
     unit_project_approval_date: ref(null),
-    project_material_links: ref(null)
+    project_material_links: ref(null),
+    civil_defense_notes: ref(null),
+    architectural_notes: ref(null),
+    electromechanical_notes: ref(null),
 });
 
 const filteredCountries = ref();
@@ -177,6 +180,25 @@ const submitForm = () => {
                                 <small v-show="form.errors.unit_project_approval_date" class="text-red-500">{{form.errors.unit_project_approval_date}}</small>
                             </div>
                             <FormTextItem id="project_material_links" title="رابط وثائق المشروع" v-model:field="form.project_material_links" :error="form.errors.project_material_links" />
+                        </FormContainer>
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">ملاحظات الدفاع المدني</p>
+                                <Textarea v-model="form.civil_defense_notes" rows="2" cols="30" />
+                                <small v-show="form.errors.civil_defense_notes" class="text-red-500">{{form.errors.civil_defense_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">ملاحظات المعماري</p>
+                                <Textarea v-model="form.architectural_notes" rows="2" cols="30" />
+                                <small v-show="form.errors.architectural_notes" class="text-red-500">{{form.errors.architectural_notes}}</small>
+                            </div>
+                        </FormContainer>
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">ملاحظات الالكتروميكانيك</p>
+                                <Textarea v-model="form.electromechanical_notes" rows="2" cols="30" />
+                                <small v-show="form.errors.electromechanical_notes" class="text-red-500">{{form.errors.electromechanical_notes}}</small>
+                            </div>
                         </FormContainer>
 
                         <ConfirmPopup></ConfirmPopup>

@@ -20,6 +20,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::group(['middleware' => ['auth', \App\Http\Middleware\isAdmin::class]], function () {
+    Route::get('/show-project', [\App\Http\Controllers\ProjectController::class, 'show'])->name('show-project');
     Route::get('/create-project', [\App\Http\Controllers\ProjectController::class, 'create'])->name('create-project');
     Route::post('/create-project', [\App\Http\Controllers\ProjectController::class, 'store'])->name('store-project');
     Route::get('/edit-project', [\App\Http\Controllers\ProjectController::class, 'edit'])->name('edit-project');
