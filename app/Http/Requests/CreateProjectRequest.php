@@ -28,8 +28,13 @@ class CreateProjectRequest extends FormRequest
             'unit_project_approval_date' => 'nullable|date',
             'project_material_links' => 'nullable|string|url:http,https',
             'civil_defense_notes' => 'nullable|string',
+            'civil_defense_actions' => 'nullable|string',
             'architectural_notes' => 'nullable|string',
+            'architectural_actions' => 'nullable|string',
             'electromechanical_notes' => 'nullable|string',
+            'electromechanical_actions' => 'nullable|string',
+            'other_notes' => 'nullable|string',
+            'other_actions' => 'nullable|string',
         ];
     }
 }

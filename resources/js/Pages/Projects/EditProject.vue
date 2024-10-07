@@ -52,9 +52,16 @@ const form = useForm({
     coord_unit_review_date: ref(props.project.coord_unit_review_date ?? null),
     unit_project_approval_date: ref(props.project.unit_project_approval_date ?? null),
     project_material_links: ref(props.project.project_material_links),
+
     civil_defense_notes: ref(props.project.civil_defense_notes ?? null),
+    civil_defense_actions: ref(props.project.civil_defense_actions ?? null),
     architectural_notes: ref(props.project.architectural_notes ?? null),
+    architectural_actions: ref(props.project.architectural_actions ?? null),
     electromechanical_notes: ref(props.project.electromechanical_notes ?? null),
+    electromechanical_actions: ref(props.project.electromechanical_actions ?? null),
+    other_notes: ref(props.project.other_notes ?? null),
+    other_actions: ref(props.project.other_actions ?? null),
+
 });
 
 const delForm = useForm({});
@@ -207,9 +214,21 @@ const deleteForm = () => {
                                 <small v-show="form.errors.civil_defense_notes" class="text-red-500">{{form.errors.civil_defense_notes}}</small>
                             </div>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.civil_defense_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.civil_defense_actions" class="text-red-500">{{form.errors.civil_defense_actions}}</small>
+                            </div>
+                        </FormContainer>
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">ملاحظات المعماري</p>
                                 <Textarea v-model="form.architectural_notes" rows="2" cols="30" />
                                 <small v-show="form.errors.architectural_notes" class="text-red-500">{{form.errors.architectural_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.architectural_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.architectural_actions" class="text-red-500">{{form.errors.architectural_actions}}</small>
                             </div>
                         </FormContainer>
                         <FormContainer>
@@ -217,6 +236,24 @@ const deleteForm = () => {
                                 <p class="cursor-default">ملاحظات الالكتروميكانيك</p>
                                 <Textarea v-model="form.electromechanical_notes" rows="2" cols="30" />
                                 <small v-show="form.errors.electromechanical_notes" class="text-red-500">{{form.errors.electromechanical_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.electromechanical_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.electromechanical_actions" class="text-red-500">{{form.errors.electromechanical_actions}}</small>
+                            </div>
+                        </FormContainer>
+
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">ملاحظات أخرى</p>
+                                <Textarea v-model="form.other_notes" rows="2" cols="30" />
+                                <small v-show="form.errors.other_notes" class="text-red-500">{{form.errors.other_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.other_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.other_actions" class="text-red-500">{{form.errors.other_actions}}</small>
                             </div>
                         </FormContainer>
 

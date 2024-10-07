@@ -48,9 +48,9 @@ class ProjectController extends Controller
      */
     public function store(CreateProjectRequest $request)
     {
-        Project::create($request->validated());
+        $project = Project::create($request->validated());
 
-        return redirect()->route('dashboard');
+        return redirect()->route('show-project', ['id' => $project->id]);
     }
 
     /**
@@ -82,6 +82,7 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($request->id);
         $project->update($request->validated());
+        return redirect()->route('show-project', ['id' => $project->id]);
     }
 
     /**

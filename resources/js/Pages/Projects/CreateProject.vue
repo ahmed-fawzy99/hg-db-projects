@@ -46,8 +46,13 @@ const form = useForm({
     unit_project_approval_date: ref(null),
     project_material_links: ref(null),
     civil_defense_notes: ref(null),
+    civil_defense_actions: ref(null),
     architectural_notes: ref(null),
+    architectural_actions: ref(null),
     electromechanical_notes: ref(null),
+    electromechanical_actions: ref(null),
+    other_notes: ref(null),
+    other_actions: ref(null),
 });
 
 const filteredCountries = ref();
@@ -188,9 +193,21 @@ const submitForm = () => {
                                 <small v-show="form.errors.civil_defense_notes" class="text-red-500">{{form.errors.civil_defense_notes}}</small>
                             </div>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.civil_defense_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.civil_defense_actions" class="text-red-500">{{form.errors.civil_defense_actions}}</small>
+                            </div>
+                        </FormContainer>
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">ملاحظات المعماري</p>
                                 <Textarea v-model="form.architectural_notes" rows="2" cols="30" />
                                 <small v-show="form.errors.architectural_notes" class="text-red-500">{{form.errors.architectural_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.architectural_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.architectural_actions" class="text-red-500">{{form.errors.architectural_actions}}</small>
                             </div>
                         </FormContainer>
                         <FormContainer>
@@ -198,6 +215,24 @@ const submitForm = () => {
                                 <p class="cursor-default">ملاحظات الالكتروميكانيك</p>
                                 <Textarea v-model="form.electromechanical_notes" rows="2" cols="30" />
                                 <small v-show="form.errors.electromechanical_notes" class="text-red-500">{{form.errors.electromechanical_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.electromechanical_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.electromechanical_actions" class="text-red-500">{{form.errors.electromechanical_actions}}</small>
+                            </div>
+                        </FormContainer>
+
+                        <FormContainer>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">ملاحظات أخرى</p>
+                                <Textarea v-model="form.other_notes" rows="2" cols="30" />
+                                <small v-show="form.errors.other_notes" class="text-red-500">{{form.errors.other_notes}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">الإجراءات</p>
+                                <Textarea v-model="form.other_actions" rows="2" cols="30" />
+                                <small v-show="form.errors.other_actions" class="text-red-500">{{form.errors.other_actions}}</small>
                             </div>
                         </FormContainer>
 

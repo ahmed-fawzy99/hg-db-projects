@@ -67,6 +67,7 @@ class UserController extends Controller
             $request['password'] = $user->password;
         }
         $user->update($request->all());
+        return redirect()->route('users.index');
     }
 
     /**

@@ -26,8 +26,13 @@ return new class extends Migration
             $table->date('unit_project_approval_date')->nullable();
             $table->string('project_material_links')->nullable();
             $table->text('civil_defense_notes')->nullable();
+            $table->text('civil_defense_actions')->nullable();
             $table->text('architectural_notes')->nullable();
+            $table->text('architectural_actions')->nullable();
             $table->text('electromechanical_notes')->nullable();
+            $table->text('electromechanical_actions')->nullable();
+            $table->text('other_notes')->nullable();
+            $table->text('other_actions')->nullable();
             $table->timestamps();
         });
     }

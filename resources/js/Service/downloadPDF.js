@@ -102,25 +102,51 @@ export function downloadPDF(data, isTable=true) {
         element.style.fontFamily = 'IBM Plex Sans Arabic, sans-serif';
         element.style.direction = 'rtl'; // Set text direction to right-to-left for Arabic content
         element.innerHTML = `
-        <div style="padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;">
-            <h1 style="text-align: center; margin-bottom: 20px;">بيانات مشروع ${project.name}</h1>
-            <div style="margin-bottom: 8px;"><strong>اسم المشروع:</strong> ${project.name}</div>
-            <div style="margin-bottom: 8px;"><strong>الموقع:</strong> ${project.location}</div>
-            <div style="margin-bottom: 8px;"><strong>كود المشروع:</strong> ${project.code}</div>
-            <div style="margin-bottom: 8px;"><strong>اسم الاستشاري:</strong> ${project.consultant_name}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ استلام واستيفاء مستندات المشروع:</strong> ${project.documents_delivery_fulfillment_date}</div>
-            <div style="margin-bottom: 8px;"><strong>تمام تسديد المطالبة المالية:</strong> ${project.financial_status ? 'تم الدفع' : 'لم يتم الدفع'}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ تسديد المطالبة المالية:</strong> ${project.finances_payment_date}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسليم الملاحظات الأولية لوحدة التنسيق الفني:</strong> ${project.initial_review_notes_delivery_to_coord_unit_date}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها:</strong> ${project.owner_notes_delivery_after_fulfillment_date}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية:</strong> ${project.coord_unit_review_date}</div>
-            <div style="margin-bottom: 8px;"><strong>تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات:</strong> ${project.unit_project_approval_date}</div>
-            <div style="margin-bottom: 8px;"><strong>رابط وثائق المشروع:</strong> <a href="${project.project_material_links}" target="_blank">${project.project_material_links}</a></div>
-            <div style="margin-bottom: 8px;"><strong>ملاحظات الحماية المدنية:</strong> ${project.civil_defense_notes}</div>
-            <div style="margin-bottom: 8px;"><strong>ملاحظات المعماري:</strong> ${project.architectural_notes}</div>
-            <div style="margin-bottom: 8px;"><strong>ملاحظات الالكتروميكانيك:</strong> ${project.electromechanical_notes}</div>
-        </div>
-    `;
+<div style="padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <h1 style="text-align: center; margin-bottom: 20px;">بيانات مشروع ${project.name}</h1>
+    <div style="margin-bottom: 8px;"><strong>اسم المشروع:</strong> ${project.name}</div>
+    <div style="margin-bottom: 8px;"><strong>الموقع:</strong> ${project.location}</div>
+    <div style="margin-bottom: 8px;"><strong>كود المشروع:</strong> ${project.code}</div>
+    <div style="margin-bottom: 8px;"><strong>اسم الاستشاري:</strong> ${project.consultant_name}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ استلام واستيفاء مستندات المشروع:</strong> ${project.documents_delivery_fulfillment_date}</div>
+    <div style="margin-bottom: 8px;"><strong>تمام تسديد المطالبة المالية:</strong> ${project.financial_status ? 'تم الدفع' : 'لم يتم الدفع'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ تسديد المطالبة المالية:</strong> ${project.finances_payment_date}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسليم الملاحظات الأولية لوحدة التنسيق الفني:</strong> ${project.initial_review_notes_delivery_to_coord_unit_date}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها:</strong> ${project.owner_notes_delivery_after_fulfillment_date}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية:</strong> ${project.coord_unit_review_date}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات:</strong> ${project.unit_project_approval_date}</div>
+    <div style="margin-bottom: 8px;"><strong>رابط وثائق المشروع:</strong> <a href="${project.project_material_links}" target="_blank">${project.project_material_links}</a></div>
+
+    <div style="margin-bottom: 8px;">
+        <strong>ملاحظات الحماية المدنية:</strong> ${project.civil_defense_notes ?? 'لا يوجد'}
+    </div>
+    <div style="margin-bottom: 8px;">
+        <strong>الإجراءات:</strong> ${project.civil_defense_actions ?? 'لا يوجد'}
+    </div>
+
+    <div style="margin-bottom: 8px;">
+        <strong>ملاحظات المعماري:</strong> ${project.architectural_notes ?? 'لا يوجد'}
+    </div>
+    <div style="margin-bottom: 8px;">
+        <strong>الإجراءات:</strong> ${project.architectural_actions ?? 'لا يوجد'}
+    </div>
+
+    <div style="margin-bottom: 8px;">
+        <strong>ملاحظات الالكتروميكانيك:</strong> ${project.electromechanical_notes ?? 'لا يوجد'}
+    </div>
+    <div style="margin-bottom: 8px;">
+        <strong>الإجراءات:</strong> ${project.electromechanical_actions ?? 'لا يوجد'}
+    </div>
+
+    <div style="margin-bottom: 8px;">
+        <strong>ملاحظات أخرى:</strong> ${project.other_notes ?? 'لا يوجد'}
+    </div>
+    <div style="margin-bottom: 8px;">
+        <strong>الإجراءات:</strong> ${project.other_actions ?? 'لا يوجد'}
+    </div>
+</div>
+`;
+
 
         // Configure html2pdf options to ensure margins and text preservation
         const options = {

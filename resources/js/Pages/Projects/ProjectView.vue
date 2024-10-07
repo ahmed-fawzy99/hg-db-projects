@@ -47,7 +47,7 @@ defineProps({
                                     </div>
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">تمام تسديد المطالبة المالية (نعم / لا)</dt>
-                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.financial_status ? 'تم الدفع' : 'لم يتم الدفع' }}</dd>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.financial_status ? 'لا' : 'نعم' }}</dd>
                                     </div>
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">تاريخ تسديد المطالبة المالية</dt>
@@ -77,16 +77,33 @@ defineProps({
                                     </div>
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">ملاحظات الحماية المدنية</dt>
-                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.civil_defense_notes }}</dd>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.civil_defense_notes ?? 'لا يوجد'}}</dd>
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">الإجراءات</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.civil_defense_actions ?? 'لا يوجد' }}</dd>
+
                                     </div>
+
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">ملاحظات المعماري</dt>
-                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.architectural_notes }}</dd>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.architectural_notes ?? 'لا يوجد'}}</dd>
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">الإجراءات</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.architectural_actions ?? 'لا يوجد' }}</dd>
                                     </div>
+
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">ملاحظات الالكتروميكانيك</dt>
-                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.electromechanical_notes }}</dd>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.electromechanical_notes ?? 'لا يوجد'}}</dd>
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">الإجراءات</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.electromechanical_actions ?? 'لا يوجد'}}</dd>
                                     </div>
+
+                                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">ملاحظات أخرى</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.other_notes ?? 'لا يوجد'}}</dd>
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">الإجراءات</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.other_actions ?? 'لا يوجد'}}</dd>
+                                    </div>
+
                                 </dl>
                             </div>
                         </div>
