@@ -2,11 +2,19 @@
 git clone https://github.com/ahmed-fawzy99/hg-db-projects.git
 cd hg-db-projects
 composer install
+npm install
 cp .env.example .env 
+```
+
+Open `.env` and set your database credentials.
+
+```
 php artisan key:generate
 php artisan migrate --seed
-npm install
+```
 
+Run Development Server:
+```
 npm run dev
 php artisan serve
 ```
@@ -19,7 +27,6 @@ Pre-requisites:
 - Install Composer
 - Install Node.js
 - Install PostgreSQL
-- Install Git
 
 ## PHP
 Download PHP from [here](https://windows.php.net/download/) -> Thread Safe -> x64 -> Latest
@@ -33,7 +40,7 @@ Add `C:\php` to the system environment variables:
 - You should see the PHP version
 
 ### PHP Extensions
-- Enable the following extensions in `php.ini` by uncommenting them:
+- Enable the following extensions in `php.ini` (copy php-ini-development and name it php.ini if there is no php.ini) in `C:\php` by uncommenting them:
   - `extension=curl`
   - `extension=fileinfo`
   - `extension=gd2`
@@ -45,6 +52,7 @@ Add `C:\php` to the system environment variables:
   - `extension=xmlrpc`
   - `extension=xsl`
   - `extension=zip`
+Verify the installation by running `php -m` in `cmd` and you should see the enabled extensions
 
 ## Composer
 ```
@@ -53,14 +61,19 @@ php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b3
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 ```
+Verify the installation by running `composer -V` in `cmd` and you should see the Composer version
 
 ## Node.js
 Download Node.js from [here](https://nodejs.org/en/download/) -> LTS
 
+Install it.
+
+Verify the installation by running `node -v` and `npm -v` in `cmd` and you should see the Node.js and npm versions
+
 ## PostgreSQL
 Download PostgreSQL from [here](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) -> Windows -> Latest
-and install it.
-Then, open `pgAdmin` and create a new database with the name `hg_db_projects`
 
-## Git
-Download Git from [here](https://git-scm.com/download/win)
+Install it, and remember the password you set for the `postgres` user as we well as the port number.
+
+
+Then, open `pgAdmin` and create a new database with the name `hg_db_projects`
