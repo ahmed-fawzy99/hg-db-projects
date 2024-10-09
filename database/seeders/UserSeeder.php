@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         $randomPassword = Str::random(12);
         User::factory()->create([
             'name' => 'ل. حسن جابر',
-            'email' => 'hgaber@gmail.org',
+            'email' => 'hgaber@gmail.com',
             'role' => 'admin',
             'password' => bcrypt($randomPassword),
         ]);
