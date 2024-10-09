@@ -22,7 +22,7 @@ const props = defineProps({
                         <DataTable :value="users" removableSort stripedRows :row-hover="true"
                                    :paginator="users.length > 25" :rows="25" :rowsPerPageOptions="[5, 10, 20, 50]"
                                    class="text-sm" tableStyle="min-width: 50rem;">
-                            <Column header="م" sortable >
+                            <Column header="م" >
                                 <template #body="data">
                                     <span>{{data.index + 1}}</span>
                                 </template>
