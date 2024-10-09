@@ -17,9 +17,10 @@ export function downloadPDF(data, isTable=true) {
             Code: item.code,
             Consultant: item.consultant_name || 'N/A',
             DocumentsDate: new Date(item.documents_delivery_fulfillment_date).toLocaleDateString(),
-            FinancialStatus: item.financial_status ? 'مدفوع' : 'غير مدفوع',
+            FinancialStatus: item.financial_status ? 'نعم' : 'لا',
             PaymentDate: item.finances_payment_date ? new Date(item.finances_payment_date).toLocaleDateString() : 'N/A',
             InitialReviewDate: item.initial_review_notes_delivery_to_coord_unit_date ? new Date(item.initial_review_notes_delivery_to_coord_unit_date).toLocaleDateString() : 'N/A',
+            OwnerNotesReceiptDate: item.owner_notes_receipt_date ? new Date(item.owner_notes_receipt_date).toLocaleDateString() : 'N/A',
             OwnerNotesDate: item.owner_notes_delivery_after_fulfillment_date ? new Date(item.owner_notes_delivery_after_fulfillment_date).toLocaleDateString() : 'N/A',
             CoordReviewDate: item.coord_unit_review_date ? new Date(item.coord_unit_review_date).toLocaleDateString() : 'N/A',
             ApprovalDate: item.unit_project_approval_date ? new Date(item.unit_project_approval_date).toLocaleDateString() : 'N/A',
@@ -35,6 +36,7 @@ export function downloadPDF(data, isTable=true) {
                 dataKey: 'CoordReviewDate'
             },
             {header: 'تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها', dataKey: 'OwnerNotesDate'},
+            {header: 'تاريخ استلام المالك للملاحظات', dataKey: 'OwnerNotesReceiptDate'},
             {
                 header: 'تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسليم الملاحظات الأولية لوحدة التنسيق الفني',
                 dataKey: 'InitialReviewDate'
@@ -103,19 +105,20 @@ export function downloadPDF(data, isTable=true) {
         element.style.direction = 'rtl'; // Set text direction to right-to-left for Arabic content
         element.innerHTML = `
 <div style="padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;">
-    <h1 style="text-align: center; margin-bottom: 20px;">بيانات مشروع ${project.name}</h1>
-    <div style="margin-bottom: 8px;"><strong>اسم المشروع:</strong> ${project.name}</div>
-    <div style="margin-bottom: 8px;"><strong>الموقع:</strong> ${project.location}</div>
-    <div style="margin-bottom: 8px;"><strong>كود المشروع:</strong> ${project.code}</div>
-    <div style="margin-bottom: 8px;"><strong>اسم الاستشاري:</strong> ${project.consultant_name}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ استلام واستيفاء مستندات المشروع:</strong> ${project.documents_delivery_fulfillment_date}</div>
+    <h1 style="text-align: center; margin-bottom: 20px;">بيانات مشروع ${project.name ?? 'لا يوجد'}</h1>
+    <div style="margin-bottom: 8px;"><strong>اسم المشروع:</strong> ${project.name ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>الموقع:</strong> ${project.location ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>كود المشروع:</strong> ${project.code ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>اسم الاستشاري:</strong> ${project.consultant_name ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ استلام واستيفاء مستندات المشروع:</strong> ${project.documents_delivery_fulfillment_date ?? 'لا يوجد'}</div>
     <div style="margin-bottom: 8px;"><strong>تمام تسديد المطالبة المالية:</strong> ${project.financial_status ? 'تم الدفع' : 'لم يتم الدفع'}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ تسديد المطالبة المالية:</strong> ${project.finances_payment_date}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسليم الملاحظات الأولية لوحدة التنسيق الفني:</strong> ${project.initial_review_notes_delivery_to_coord_unit_date}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها:</strong> ${project.owner_notes_delivery_after_fulfillment_date}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية:</strong> ${project.coord_unit_review_date}</div>
-    <div style="margin-bottom: 8px;"><strong>تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات:</strong> ${project.unit_project_approval_date}</div>
-    <div style="margin-bottom: 8px;"><strong>رابط وثائق المشروع:</strong> <a href="${project.project_material_links}" target="_blank">${project.project_material_links}</a></div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ تسديد المطالبة المالية:</strong> ${project.finances_payment_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسليم الملاحظات الأولية لوحدة التنسيق الفني:</strong> ${project.initial_review_notes_delivery_to_coord_unit_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ استلام المالك للملاحظات:</strong> ${project.owner_notes_receipt_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها:</strong> ${project.owner_notes_delivery_after_fulfillment_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية:</strong> ${project.coord_unit_review_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات:</strong> ${project.unit_project_approval_date ?? 'لا يوجد'}</div>
+    <div style="margin-bottom: 8px;"><strong>رابط وثائق المشروع:</strong> <a href="${project.project_material_links ?? '#'}" target="_blank">${project.project_material_links ?? 'لا يوجد'}</a></div>
 
     <div style="margin-bottom: 8px;">
         <strong>ملاحظات الحماية المدنية:</strong> ${project.civil_defense_notes ?? 'لا يوجد'}

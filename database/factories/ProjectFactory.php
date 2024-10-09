@@ -36,6 +36,7 @@ class ProjectFactory extends Factory
             'documents_delivery_fulfillment_date' => $this->faker->date(),
             'financial_status' => $this->faker->boolean,
             'finances_payment_date' => $financesPaymentDate,
+            'owner_notes_receipt_date' => $this->faker->date(),
             'initial_review_notes_delivery_to_coord_unit_date' => $initialTechnicalReviewDate,
             'owner_notes_delivery_after_fulfillment_date' => $this->faker->date(),
             'coord_unit_review_date' => $this->faker->date(),

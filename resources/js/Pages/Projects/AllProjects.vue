@@ -2,19 +2,21 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
-import {ref, onMounted, computed} from 'vue';
+import {ref, } from 'vue';
 import {downloadPDF} from "@/Service/downloadPDF.js";
-import {formatDate} from "../../Service/formatDate.js";
+import {formatDate} from "@/Service/formatDate.js";
 
 
 const props = defineProps({
     projects: Array
 });
+const DAYS_FILTER = 13;
 
 props.projects = [...props.projects].map(project => {
     project.documents_delivery_fulfillment_date = project.documents_delivery_fulfillment_date ? new Date(project.documents_delivery_fulfillment_date) : null;
     project.finances_payment_date = project.finances_payment_date ? new Date(project.finances_payment_date) : null;
     project.initial_review_notes_delivery_to_coord_unit_date = project.initial_review_notes_delivery_to_coord_unit_date ? new Date(project.initial_review_notes_delivery_to_coord_unit_date) : null;
+    project.owner_notes_receipt_date = project.owner_notes_receipt_date ? new Date(project.owner_notes_receipt_date) : null;
     project.owner_notes_delivery_after_fulfillment_date = project.owner_notes_delivery_after_fulfillment_date ? new Date(project.owner_notes_delivery_after_fulfillment_date) : null;
     project.coord_unit_review_date = project.coord_unit_review_date ? new Date(project.coord_unit_review_date) : null;
     project.unit_project_approval_date = project.unit_project_approval_date ? new Date(project.unit_project_approval_date) : null;
@@ -36,6 +38,7 @@ const initFilters = () => {
         financial_status: { value: null, matchMode: FilterMatchMode.EQUALS },
         finances_payment_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         initial_review_notes_delivery_to_coord_unit_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+        owner_notes_receipt_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         owner_notes_delivery_after_fulfillment_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         coord_unit_review_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         unit_project_approval_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
@@ -47,23 +50,36 @@ const clearFilter = () => {
     initFilters();
     shallowFilteredProjects.value = props.projects;
     daysFilter.value = false;
+    notesFilter.value = false;
 };
 
-const isMoreThan15Days = (date1, date2) => (date1 - date2) / (1000 * 60 * 60 * 24) > 15;
+const isMoreThanDays = (date1, date2, period = null) => (date1 - date2) / (1000 * 60 * 60 * 24) > (period ?? DAYS_FILTER);
 
 const daysFilter = ref(false);
-const filter15DaysAfter = () => {
+const filterDaysAfter = () => {
     if (daysFilter.value) {
         shallowFilteredProjects.value = props.projects;
     } else {
         shallowFilteredProjects.value = shallowFilteredProjects.value.filter(project => {
             const paymentDate = new Date(project.finances_payment_date);
             const deliveryDate = new Date(project.initial_review_notes_delivery_to_coord_unit_date);
-            return (deliveryDate - paymentDate) / (1000 * 60 * 60 * 24) > 15;
+            return (deliveryDate - paymentDate) / (1000 * 60 * 60 * 24) > DAYS_FILTER;
         });
     }
     daysFilter.value = !daysFilter.value;
+};
 
+const notesFilter = ref(false);
+
+const filterOwnerNotesDelivery = () => {
+    if (notesFilter.value) {
+        shallowFilteredProjects.value = props.projects;
+    } else {
+        shallowFilteredProjects.value = shallowFilteredProjects.value.filter(project => {
+            return !project.owner_notes_delivery_after_fulfillment_date;
+        });
+    }
+    notesFilter.value = !notesFilter.value;
 };
 const filteredData = ref([]);
 const onFilter = (event) => {
@@ -79,20 +95,25 @@ const onFilter = (event) => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h1 class="text-3xl font-semibold pb-4">جميع المشروعات</h1>
-
-                        <DataTable :value="shallowFilteredProjects" removableSort stripedRows :row-hover="true"
+                        <p v-if="!shallowFilteredProjects.length" class="text-center mx-auto">
+                            لا يوجد أي مشروعات حالياً
+                        </p>
+                        <DataTable v-else :value="shallowFilteredProjects" removableSort stripedRows :row-hover="true"
                                    :paginator="shallowFilteredProjects.length > 25" :rows="25" :rowsPerPageOptions="[5, 10, 20, 50]"
                                    v-model:filters="filters" dataKey="id" filterDisplay="menu"
-                                   v-on:filter="onFilter"
-                                   :globalFilterFields="['name', 'location', 'representative.name', 'code', 'consultant_name', 'documents_delivery_fulfillment_date', 'financial_status', 'finances_payment_date', 'initial_review_notes_delivery_to_coord_unit_date', 'owner_notes_delivery_after_fulfillment_date', 'coord_unit_review_date', 'unit_project_approval_date', 'project_material_links']"
+                                   v-on:filter="onFilter" scrollable
+                                   :globalFilterFields="['name', 'location', 'representative.name', 'code', 'consultant_name', 'documents_delivery_fulfillment_date', 'financial_status', 'finances_payment_date', 'initial_review_notes_delivery_to_coord_unit_date', 'owner_notes_receipt_date', 'owner_notes_delivery_after_fulfillment_date', 'coord_unit_review_date', 'unit_project_approval_date', 'project_material_links']"
                                    class="text-sm" tableStyle="min-width: 50rem;">
                             <template #header>
                                 <div class="flex max-md:flex-col justify-between gap-4">
                                     <div class="flex max-md:flex-col gap-4">
                                         <Button type="button" icon="pi pi-filter-slash" label="مسح التصفيات" outlined @click="clearFilter()" />
-                                        <Button type="button" icon="pi pi-calendar" label="15 يوم من تاريخ تسديد المطالبة"
+                                        <Button type="button" icon="pi pi-calendar" :label="DAYS_FILTER + ' يوم من تاريخ تسديد المطالبة'"
                                                 :class="{ '!bg-primary !text-white': daysFilter }"
-                                                outlined @click="filter15DaysAfter()" />
+                                                outlined @click="filterDaysAfter()" />
+                                        <Button type="button" icon="pi pi-calendar" label="لم يسلم الملاحظات"
+                                                :class="{ '!bg-primary !text-white': notesFilter }"
+                                                outlined @click="filterOwnerNotesDelivery()" />
                                         <Button type="button" icon="pi pi-file-pdf" label="تحميل PDF" outlined @click="downloadPDF(filteredData)" />
                                     </div>
                                     <IconField>
@@ -164,8 +185,19 @@ const onFilter = (event) => {
                             </Column>
                             <Column field="initial_review_notes_delivery_to_coord_unit_date" header="تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسيلم الملاحظات الأولية لوحدة التنسيق الفني"  :showFilterOperator="false" :showAddButton="false"  filterField="initial_review_notes_delivery_to_coord_unit_date" dataType="date" sortable>
                                 <template #body="{ data }">
-                                    <span v-if="data.initial_review_notes_delivery_to_coord_unit_date" :class="(isMoreThan15Days(data.initial_review_notes_delivery_to_coord_unit_date, data.finances_payment_date) || !data.initial_review_notes_delivery_to_coord_unit_date) ? 'text-red-600' : 'text-teal-600'">
+                                    <span v-if="data.initial_review_notes_delivery_to_coord_unit_date" :class="(isMoreThanDays(data.initial_review_notes_delivery_to_coord_unit_date, data.finances_payment_date) || !data.initial_review_notes_delivery_to_coord_unit_date) ? 'text-red-600' : 'text-teal-600'">
                                         {{formatDate(data.initial_review_notes_delivery_to_coord_unit_date)}}
+                                    </span>
+                                    <span v-else>لا يوجد</span>
+                                </template>
+                                <template #filter="{ filterModel }">
+                                    <DatePicker v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
+                                </template>
+                            </Column>
+                            <Column field="owner_notes_receipt_date" header="تاريخ استلام المالك للملاحظات"  :showFilterOperator="false" :showAddButton="false"  filterField="owner_notes_receipt_date" dataType="date" sortable>
+                                <template #body="{ data }">
+                                    <span v-if="data.owner_notes_receipt_date" :class="(isMoreThanDays(data.owner_notes_receipt_date, data.finances_payment_date, 60) || !data.owner_notes_receipt_date) ? 'text-red-600' : 'text-teal-600'">
+                                        {{formatDate(data.owner_notes_receipt_date)}}
                                     </span>
                                     <span v-else>لا يوجد</span>
                                 </template>
@@ -212,11 +244,11 @@ const onFilter = (event) => {
                                     <span v-else>لا يوجد</span>
                                 </template>
                             </Column>
-                            <Column header="مهمات" v-if="$page.props.auth.user.role === 'admin'">
+                            <Column header="مهمات">
                                 <template #body="{ data }">
                                     <div class="flex gap-2">
                                         <Link :href="route('show-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-eye text-primary pe-1 !text-sm" />عرض </Link>
-                                        <Link :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
+                                        <Link v-if="$page.props.auth.user.role === 'admin'" :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
                                     </div>
                                 </template>
                             </Column>

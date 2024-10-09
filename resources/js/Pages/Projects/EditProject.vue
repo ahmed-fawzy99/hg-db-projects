@@ -49,6 +49,7 @@ const form = useForm({
     finances_payment_date: ref(props.project.finances_payment_date ?? null),
     initial_review_notes_delivery_to_coord_unit_date: ref(props.project.initial_review_notes_delivery_to_coord_unit_date ?? null),
     owner_notes_delivery_after_fulfillment_date: ref(props.project.owner_notes_delivery_after_fulfillment_date ?? null),
+    owner_notes_receipt_date: ref(props.project.owner_notes_receipt_date ?? null),
     coord_unit_review_date: ref(props.project.coord_unit_review_date ?? null),
     unit_project_approval_date: ref(props.project.unit_project_approval_date ?? null),
     project_material_links: ref(props.project.project_material_links),
@@ -62,10 +63,26 @@ const form = useForm({
     other_notes: ref(props.project.other_notes ?? null),
     other_actions: ref(props.project.other_actions ?? null),
 
+    review_letter: ref(null),
+
 });
 
 const delForm = useForm({});
 const filteredCountries = ref();
+
+
+const file_upload_text = ref("رفع خطاب المراجعة (PDF, DOC, DOCX)");
+const fileUploaded = ref(false);
+
+const triggerFileUpload = () => {
+    document.getElementById('file-upload').click();
+}
+
+const HandleFileUpload = (event) => {
+    file_upload_text.value = event.target.files[0].name;
+    fileUploaded.value = true;
+    form.review_letter = document.getElementById('file-upload').files[0];
+}
 
 const search = (event) => {
     setTimeout(() => {
@@ -82,8 +99,9 @@ const search = (event) => {
 
 const submitForm = () => {
     form.location = form.location?.city_name_ar ?? form.location;
-    form.put(route('update-project', {id: props.project.id}), {
+    form.post(route('update-project', {id: props.project.id}), {
         preserveScroll: true,
+        _method: 'put', // to override the method spoofing
         onSuccess: () => {
             toast.add({severity: 'success', summary: 'تمت العملية بنجاح', detail: 'تم تعديل بيانات المشروع بنجاح', life: 4000});
         },
@@ -164,49 +182,48 @@ const deleteForm = () => {
                             </div>
                             <div class="flex flex-col col-span-2 sm:col-span-1" >
                                 <p class="cursor-default">تاريخ انتهاء اللجنة الفنية من مراجعة المشروع وتسيلم الملاحظات الأولية لوحدة التنسيق الفني</p>
-                                <DatePicker id="initial_review_notes_delivery_to_coord_unit_date" v-model="form.initial_review_notes_delivery_to_coord_unit_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                <DatePicker id="initial_review_notes_delivery_to_coord_unit_date" v-model="form.initial_review_notes_delivery_to_coord_unit_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.initial_review_notes_delivery_to_coord_unit_date"/>
                                 <small v-show="form.errors.initial_review_notes_delivery_to_coord_unit_date" class="text-red-500">{{form.errors.initial_review_notes_delivery_to_coord_unit_date}}</small>
                             </div>
                         </FormContainer>
                         <FormContainer v-if="form.financial_status">
                             <div class="flex flex-col col-span-2 sm:col-span-1">
-                                <p class="cursor-default">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</p>
-                                <DatePicker id="owner_notes_delivery_after_fulfillment_date" v-model="form.owner_notes_delivery_after_fulfillment_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
-                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_delivery_after_fulfillment_date"/>
-                                <small v-show="form.errors.owner_notes_delivery_after_fulfillment_date" class="text-red-500">{{form.errors.owner_notes_delivery_after_fulfillment_date}}</small>
+                                <p class="cursor-default">تاريخ استلام المالك للملاحظات</p>
+                                <DatePicker id="owner_notes_receipt_date" v-model="form.owner_notes_receipt_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_receipt_date"/>
+                                <small v-show="form.errors.owner_notes_receipt_date" class="text-red-500">{{form.errors.owner_notes_receipt_date}}</small>
                             </div>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
-                                <p class="cursor-default">تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية</p>
-                                <DatePicker id="coord_unit_review_date" v-model="form.coord_unit_review_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
-                                            class="!w-full" :manualInput="false" :invalid="form.errors.coord_unit_review_date"/>
-                                <small v-show="form.errors.coord_unit_review_date" class="text-red-500">{{form.errors.coord_unit_review_date}}</small>
+                                <p class="cursor-default">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</p>
+                                <DatePicker id="owner_notes_delivery_after_fulfillment_date" v-model="form.owner_notes_delivery_after_fulfillment_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_delivery_after_fulfillment_date"/>
+                                <small v-show="form.errors.owner_notes_delivery_after_fulfillment_date" class="text-red-500">{{form.errors.owner_notes_delivery_after_fulfillment_date}}</small>
                             </div>
                         </FormContainer>
                         <FormContainer v-if="form.financial_status">
                             <div class="flex flex-col col-span-2 sm:col-span-1">
-                                <p class="cursor-default">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</p>
-                                <DatePicker id="owner_notes_delivery_after_fulfillment_date" v-model="form.owner_notes_delivery_after_fulfillment_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
-                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_delivery_after_fulfillment_date"/>
-                                <small v-show="form.errors.owner_notes_delivery_after_fulfillment_date" class="text-red-500">{{form.errors.owner_notes_delivery_after_fulfillment_date}}</small>
-                            </div>
-                            <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية</p>
-                                <DatePicker id="coord_unit_review_date" v-model="form.coord_unit_review_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                <DatePicker id="coord_unit_review_date" v-model="form.coord_unit_review_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.coord_unit_review_date"/>
                                 <small v-show="form.errors.coord_unit_review_date" class="text-red-500">{{form.errors.coord_unit_review_date}}</small>
                             </div>
-                        </FormContainer>
-                        <FormContainer>
                             <div class="flex flex-col col-span-2 sm:col-span-1" v-if="form.financial_status">
                                 <p class="cursor-default">تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات</p>
-                                <DatePicker id="unit_project_approval_date" v-model="form.unit_project_approval_date" placeholder="اختر التاريخ..."dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                <DatePicker id="unit_project_approval_date" v-model="form.unit_project_approval_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.unit_project_approval_date"/>
                                 <small v-show="form.errors.unit_project_approval_date" class="text-red-500">{{form.errors.unit_project_approval_date}}</small>
                             </div>
-                            <FormTextItem id="project_material_links" title="رابط وثائق المشروع" v-model:field="form.project_material_links" :error="form.errors.project_material_links" />
                         </FormContainer>
-
+                        <FormContainer>
+                            <FormTextItem id="project_material_links" title="رابط وثائق المشروع" v-model:field="form.project_material_links" :error="form.errors.project_material_links" />
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">خطاب المراجعة</p>
+                                <input type="file" @change="HandleFileUpload($event)" class="hidden" id="file-upload" accept=".doc, .docx, .pdf"/>
+                                <Button severity="secondary"  :label="file_upload_text" :icon="fileUploaded ? '' : 'pi pi-plus'" rounded @click="triggerFileUpload"/>
+                                <small v-show="form.errors.review_letter" class="text-red-500">{{form.errors.review_letter}}</small>
+                            </div>
+                        </FormContainer>
                         <FormContainer>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">ملاحظات الدفاع المدني</p>
@@ -243,7 +260,6 @@ const deleteForm = () => {
                                 <small v-show="form.errors.electromechanical_actions" class="text-red-500">{{form.errors.electromechanical_actions}}</small>
                             </div>
                         </FormContainer>
-
                         <FormContainer>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">ملاحظات أخرى</p>

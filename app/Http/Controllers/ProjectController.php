@@ -10,6 +10,7 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
+    private $DAYS_FILTER = 13;
     /**
      * Display a listing of the resource.
      */
@@ -22,7 +23,7 @@ class ProjectController extends Controller
     public function lateProjects()
     {
         return Inertia::render('Projects/LateNoneProjects', [
-            'projects' => Project::whereRaw('(initial_review_notes_delivery_to_coord_unit_date - finances_payment_date) > 15')
+            'projects' => Project::whereRaw('(initial_review_notes_delivery_to_coord_unit_date - finances_payment_date) > ?', [$this->DAYS_FILTER])
                 ->orWhereNull('initial_review_notes_delivery_to_coord_unit_date')
                 ->orderBy('initial_review_notes_delivery_to_coord_unit_date', 'asc')
                 ->get(),
@@ -31,7 +32,8 @@ class ProjectController extends Controller
     public function okProjects()
     {
         return Inertia::render('Projects/OkProjects', [
-            'projects' => Project::whereRaw('(initial_review_notes_delivery_to_coord_unit_date - finances_payment_date) <= 15')->get()
+            'projects' => Project::whereRaw('(initial_review_notes_delivery_to_coord_unit_date - finances_payment_date) <= ?', [$this->DAYS_FILTER])
+                ->get()
         ]);
     }
 
@@ -48,8 +50,11 @@ class ProjectController extends Controller
      */
     public function store(CreateProjectRequest $request)
     {
-        $project = Project::create($request->validated());
 
+        $project = Project::create($request->except('review_letter'));
+        if (isset($request->validated()['review_letter'])) {
+            $project->addMedia($request->validated()['review_letter'])->toMediaCollection('review_letter');
+        }
         return redirect()->route('show-project', ['id' => $project->id]);
     }
 
@@ -58,8 +63,10 @@ class ProjectController extends Controller
      */
     public function show(Request $request)
     {
+        $project = Project::findOrFail($request->id);
         return Inertia::render('Projects/ProjectView', [
-            'project' => Project::findOrFail($request->id),
+            'project' => $project,
+            'review_letter' => $project->getFirstMediaUrl('review_letter'),
         ]);
     }
 
@@ -81,7 +88,11 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request)
     {
         $project = Project::findOrFail($request->id);
-        $project->update($request->validated());
+        $project->update($request->except('review_letter'));
+        if (isset($request->validated()['review_letter'])) {
+            $project->clearMediaCollection('review_letter');
+            $project->addMedia($request->validated()['review_letter'])->toMediaCollection('review_letter');
+        }
         return redirect()->route('show-project', ['id' => $project->id]);
     }
 

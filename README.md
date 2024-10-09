@@ -10,7 +10,14 @@ Open `.env` and set your database credentials.
 
 ```
 php artisan key:generate
+php artisan storage:link
 php artisan migrate --seed
+```
+
+Media Library:
+```
+sudo apt install jpegoptim optipng pngquant gifsicle libavif-bin
+npm install -g svgo
 ```
 
 Run Development Server:
@@ -18,6 +25,9 @@ Run Development Server:
 npm run dev
 php artisan serve
 ```
+
+# PHP Setup
+Make sure php upload_max_filesize and post_max_size are set to appropriate values in php.ini
 
 
 # Windows Installation

@@ -10,11 +10,13 @@ import {formatDate} from "../../Service/formatDate.js";
 const props = defineProps({
     projects: Array
 });
+const OWNER_DAYS_FILTER = 60;
 
 const shallowProjects = [...props.projects].map(project => {
     project.documents_delivery_fulfillment_date = project.documents_delivery_fulfillment_date ? new Date(project.documents_delivery_fulfillment_date) : null;
     project.finances_payment_date = project.finances_payment_date ? new Date(project.finances_payment_date) : null;
     project.initial_review_notes_delivery_to_coord_unit_date = project.initial_review_notes_delivery_to_coord_unit_date ? new Date(project.initial_review_notes_delivery_to_coord_unit_date) : null;
+    project.owner_notes_receipt_date = project.owner_notes_receipt_date ? new Date(project.owner_notes_receipt_date) : null;
     project.owner_notes_delivery_after_fulfillment_date = project.owner_notes_delivery_after_fulfillment_date ? new Date(project.owner_notes_delivery_after_fulfillment_date) : null;
     project.coord_unit_review_date = project.coord_unit_review_date ? new Date(project.coord_unit_review_date) : null;
     project.unit_project_approval_date = project.unit_project_approval_date ? new Date(project.unit_project_approval_date) : null;
@@ -22,6 +24,8 @@ const shallowProjects = [...props.projects].map(project => {
 });
 
 const filters = ref();
+
+const isMoreThanDays = (date1, date2, period = null) => (date1 - date2) / (1000 * 60 * 60 * 24) > (period ?? DAYS_FILTER);
 
 const initFilters = () => {
     filters.value = {
@@ -34,6 +38,7 @@ const initFilters = () => {
         financial_status: { value: null, matchMode: FilterMatchMode.EQUALS },
         finances_payment_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         initial_review_notes_delivery_to_coord_unit_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+        owner_notes_receipt_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         owner_notes_delivery_after_fulfillment_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         coord_unit_review_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
         unit_project_approval_date: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
@@ -59,8 +64,10 @@ const onFilter = (event) => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h1 class="text-3xl font-semibold pb-4">المشروعات متأخرة تسليم الملاحظات (>15 يوم)</h1>
-
-                        <DataTable :value="shallowProjects" removableSort stripedRows :row-hover="true"
+                        <p v-if="!shallowProjects.length" class="text-center mx-auto">
+                            لا يوجد أي مشروعات حالياً
+                        </p>
+                        <DataTable v-else :value="shallowProjects" removableSort stripedRows :row-hover="true"
                                    :paginator="shallowProjects.length > 25" :rows="25" :rowsPerPageOptions="[5, 10, 20, 50]"
                                    v-model:filters="filters" dataKey="id" filterDisplay="menu"
                                    v-on:filter="onFilter"
@@ -150,6 +157,17 @@ const onFilter = (event) => {
                                     <DatePicker v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
                                 </template>
                             </Column>
+                            <Column field="owner_notes_receipt_date" header="تاريخ استلام المالك للملاحظات"  :showFilterOperator="false" :showAddButton="false"  filterField="owner_notes_receipt_date" dataType="date" sortable>
+                                <template #body="{ data }">
+                                    <span v-if="data.owner_notes_receipt_date" :class="(isMoreThanDays(data.owner_notes_receipt_date, data.finances_payment_date, OWNER_DAYS_FILTER) || !data.owner_notes_receipt_date) ? 'text-red-600' : 'text-teal-600'">
+                                        {{formatDate(data.owner_notes_receipt_date)}}
+                                    </span>
+                                    <span v-else>لا يوجد</span>
+                                </template>
+                                <template #filter="{ filterModel }">
+                                    <DatePicker v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
+                                </template>
+                            </Column>
                             <Column field="owner_notes_delivery_after_fulfillment_date" header="تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها"  :showFilterOperator="false" :showAddButton="false"  filterField="owner_notes_delivery_after_fulfillment_date" dataType="date" sortable>
                                 <template #body="{ data }">
                                     <span v-if="data.owner_notes_delivery_after_fulfillment_date">
@@ -189,11 +207,11 @@ const onFilter = (event) => {
                                     <span v-else>لا يوجد</span>
                                 </template>
                             </Column>
-                            <Column header="مهمات" v-if="$page.props.auth.user.role === 'admin'">
+                            <Column header="مهمات" >
                                 <template #body="{ data }">
                                     <div class="flex gap-2">
                                         <Link :href="route('show-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-eye text-primary pe-1 !text-sm" />عرض </Link>
-                                        <Link :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
+                                        <Link v-if="$page.props.auth.user.role === 'admin'" :href="route('edit-project', {id: data.id})" class="ps-2  text-primary inline-flex"> <span class="pi pi-pencil text-primary pe-1 !text-sm" />تعديل</Link>
                                     </div>
                                 </template>
                             </Column>

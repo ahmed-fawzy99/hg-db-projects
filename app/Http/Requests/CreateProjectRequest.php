@@ -23,6 +23,7 @@ class CreateProjectRequest extends FormRequest
             'financial_status' => 'required|boolean',
             'finances_payment_date' => 'nullable|date',
             'initial_review_notes_delivery_to_coord_unit_date' => 'nullable|date',
+            'owner_notes_receipt_date' => 'nullable|date',
             'owner_notes_delivery_after_fulfillment_date' => 'nullable|date',
             'coord_unit_review_date' => 'nullable|date',
             'unit_project_approval_date' => 'nullable|date',
@@ -35,6 +36,7 @@ class CreateProjectRequest extends FormRequest
             'electromechanical_actions' => 'nullable|string',
             'other_notes' => 'nullable|string',
             'other_actions' => 'nullable|string',
+            'review_letter' => 'nullable|file|mimes:pdf,doc,docx|max:40960',
         ];
     }
 }

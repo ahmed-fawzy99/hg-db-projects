@@ -4,7 +4,8 @@ import {Head, router} from '@inertiajs/vue3';
 import {downloadPDF} from "@/Service/downloadPDF.js";
 
 defineProps({
-    project: Object
+    project: Object,
+    review_letter: String
 });
 </script>
 
@@ -18,7 +19,7 @@ defineProps({
                         <div class="flex gap-4 justify-between">
                             <h1 class="text-3xl font-semibold pb-4">بيانات المشروع</h1>
                             <div class="flex gap-4 ">
-                                <Button type="button" icon="pi pi-pencil" label="تعديل المشروع" outlined as="button" @click="router.get(route('edit-project'), {id: project.id})" />
+                                <Button v-if="$page.props.auth.user.role === 'admin'" type="button" icon="pi pi-pencil" label="تعديل المشروع" outlined as="button" @click="router.get(route('edit-project'), {id: project.id})" />
                                 <Button type="button" icon="pi pi-file-pdf" label="تحميل PDF" outlined @click="downloadPDF(project, false)" />
                             </div>
                         </div>
@@ -58,6 +59,10 @@ defineProps({
                                         <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.initial_review_notes_delivery_to_coord_unit_date }}</dd>
                                     </div>
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">تاريخ استلام المالك للملاحظات</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.owner_notes_receipt_date }}</dd>
+                                    </div>
+                                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</dt>
                                         <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ project.owner_notes_delivery_after_fulfillment_date }}</dd>
                                     </div>
@@ -72,7 +77,16 @@ defineProps({
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">رابط وثائق المشروع</dt>
                                         <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                            <a :href="project.project_material_links" target="_blank" class="text-orange-500 hover:underline">{{ project.project_material_links }}</a>
+                                            <a v-if="project.project_material_links" :href="project.project_material_links" target="_blank" class="text-orange-500 hover:underline">{{ project.project_material_links }}</a>
+                                            <span v-else>لا يوجد</span>
+
+                                        </dd>
+                                    </div>
+                                    <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                                        <dt class="text-sm font-medium leading-6 text-gray-900">خطاب المراجعة</dt>
+                                        <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                            <a v-if="review_letter" :href="review_letter" target="_blank" class="text-orange-500 hover:underline">{{ review_letter }}</a>
+                                            <span v-else>لا يوجد</span>
                                         </dd>
                                     </div>
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">

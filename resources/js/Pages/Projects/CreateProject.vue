@@ -32,6 +32,7 @@ const confirmSubmission = (event) => {
         }
     });
 };
+
 const form = useForm({
     name: ref(null),
     location: ref(null),
@@ -42,6 +43,7 @@ const form = useForm({
     finances_payment_date: ref(null),
     initial_review_notes_delivery_to_coord_unit_date: ref(null),
     owner_notes_delivery_after_fulfillment_date: ref(null),
+    owner_notes_receipt_date: ref(null),
     coord_unit_review_date: ref(null),
     unit_project_approval_date: ref(null),
     project_material_links: ref(null),
@@ -53,9 +55,22 @@ const form = useForm({
     electromechanical_actions: ref(null),
     other_notes: ref(null),
     other_actions: ref(null),
+
+    review_letter: ref(null),
 });
 
 const filteredCountries = ref();
+const file_upload_text = ref("رفع خطاب المراجعة (PDF, DOC, DOCX)");
+const fileUploaded = ref(false);
+
+const triggerFileUpload = () => {
+    document.getElementById('file-upload').click();
+}
+
+const HandleFileUpload = (event) => {
+    file_upload_text.value = event.target.files[0].name;
+    fileUploaded.value = true;
+}
 
 const search = (event) => {
     setTimeout(() => {
@@ -71,6 +86,7 @@ const search = (event) => {
 }
 
 const submitForm = () => {
+    form.review_letter = document.getElementById('file-upload').files[0];
     form.location = form.location?.city_name_ar ?? form.location;
     form.post(route('store-project'), {
         preserveScroll: true,
@@ -106,7 +122,6 @@ const submitForm = () => {
                                 </AutoComplete>
                                 <small v-show="form.errors.location" class="text-red-500">{{form.errors.location}}</small>
                             </div>
-
                         </FormContainer>
                         <FormContainer>
                             <FormTextItem id="code" title="كود المشروع" v-model:field="form.code" :error="form.errors.code" required/>
@@ -151,40 +166,40 @@ const submitForm = () => {
                         </FormContainer>
                         <FormContainer v-if="form.financial_status">
                             <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">تاريخ استلام المالك للملاحظات</p>
+                                <DatePicker id="owner_notes_receipt_date" v-model="form.owner_notes_receipt_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
+                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_receipt_date"/>
+                                <small v-show="form.errors.owner_notes_receipt_date" class="text-red-500">{{form.errors.owner_notes_receipt_date}}</small>
+                            </div>
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</p>
                                 <DatePicker id="owner_notes_delivery_after_fulfillment_date" v-model="form.owner_notes_delivery_after_fulfillment_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_delivery_after_fulfillment_date"/>
                                 <small v-show="form.errors.owner_notes_delivery_after_fulfillment_date" class="text-red-500">{{form.errors.owner_notes_delivery_after_fulfillment_date}}</small>
-                            </div>
-                            <div class="flex flex-col col-span-2 sm:col-span-1">
-                                <p class="cursor-default">تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية</p>
-                                <DatePicker id="coord_unit_review_date" v-model="form.coord_unit_review_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
-                                            class="!w-full" :manualInput="false" :invalid="form.errors.coord_unit_review_date"/>
-                                <small v-show="form.errors.coord_unit_review_date" class="text-red-500">{{form.errors.coord_unit_review_date}}</small>
                             </div>
                         </FormContainer>
                         <FormContainer v-if="form.financial_status">
                             <div class="flex flex-col col-span-2 sm:col-span-1">
-                                <p class="cursor-default">تاريخ تسليم المالك للملاحظات لوحدة التنسيق بعد استيفاؤها</p>
-                                <DatePicker id="owner_notes_delivery_after_fulfillment_date" v-model="form.owner_notes_delivery_after_fulfillment_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
-                                            class="!w-full" :manualInput="false" :invalid="form.errors.owner_notes_delivery_after_fulfillment_date"/>
-                                <small v-show="form.errors.owner_notes_delivery_after_fulfillment_date" class="text-red-500">{{form.errors.owner_notes_delivery_after_fulfillment_date}}</small>
-                            </div>
-                            <div class="flex flex-col col-span-2 sm:col-span-1">
                                 <p class="cursor-default">تاريخ مراجعة اللجنة الرئيسية للمشروع بعد استيفاء المالك للملاحظات ومراجعة اللجنة الفنية</p>
                                 <DatePicker id="coord_unit_review_date" v-model="form.coord_unit_review_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.coord_unit_review_date"/>
                                 <small v-show="form.errors.coord_unit_review_date" class="text-red-500">{{form.errors.coord_unit_review_date}}</small>
                             </div>
-                        </FormContainer>
-                        <FormContainer>
                             <div class="flex flex-col col-span-2 sm:col-span-1" v-if="form.financial_status">
                                 <p class="cursor-default">تاريخ اعتماد اللجنة الرئيسية للمشروع بعد استيفاء جميع الملاحظات</p>
                                 <DatePicker id="unit_project_approval_date" v-model="form.unit_project_approval_date" placeholder="اختر التاريخ..." dateFormat="yy-mm-dd" showIcon iconDisplay="input"
                                             class="!w-full" :manualInput="false" :invalid="form.errors.unit_project_approval_date"/>
                                 <small v-show="form.errors.unit_project_approval_date" class="text-red-500">{{form.errors.unit_project_approval_date}}</small>
                             </div>
+                        </FormContainer>
+                        <FormContainer>
                             <FormTextItem id="project_material_links" title="رابط وثائق المشروع" v-model:field="form.project_material_links" :error="form.errors.project_material_links" />
+                            <div class="flex flex-col col-span-2 sm:col-span-1">
+                                <p class="cursor-default">خطاب المراجعة</p>
+                                <input type="file" @change="HandleFileUpload($event)" class="hidden" id="file-upload" accept=".doc, .docx, .pdf"/>
+                                <Button severity="secondary"  :label="file_upload_text" :icon="fileUploaded ? '' : 'pi pi-plus'" rounded @click="triggerFileUpload"/>
+                                <small v-show="form.errors.review_letter" class="text-red-500">{{form.errors.review_letter}}</small>
+                            </div>
                         </FormContainer>
                         <FormContainer>
                             <div class="flex flex-col col-span-2 sm:col-span-1">
