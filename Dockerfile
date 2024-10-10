@@ -39,6 +39,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 # Copy application source code into the container
 COPY . .
 
+ENV APP_ENV=production \
+    APP_DEBUG=false
+
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
 

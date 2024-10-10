@@ -16,12 +16,10 @@ services:
             SERVICE_NAME: app
             SERVICE_TAGS: production
             DB_HOST: db
-            APP_URL: http://localhost:8080
-            APP_ENV: production
-            APP_DEBUG: false
+
         working_dir: /var/www
         volumes:
-            - ./docker-compose/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+            - ./docker-compose/php/prod.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - app-network
 

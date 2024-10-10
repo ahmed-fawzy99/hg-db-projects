@@ -66,7 +66,7 @@ class ProjectController extends Controller
         $project = Project::findOrFail($request->id);
         return Inertia::render('Projects/ProjectView', [
             'project' => $project,
-            'review_letter' => $project->getFirstMediaUrl('review_letter'),
+            'review_letter' => str_replace(env('APP_URL'), '', $project->getFirstMedia('review_letter')->getUrl()),
         ]);
     }
 

@@ -3,10 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head, router} from '@inertiajs/vue3';
 import {downloadPDF} from "@/Service/downloadPDF.js";
 
-defineProps({
+const props = defineProps({
     project: Object,
     review_letter: String
 });
+const reviewLetterUrl = route().t.url + props.review_letter;
 </script>
 
 <template>
@@ -85,7 +86,7 @@ defineProps({
                                     <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                         <dt class="text-sm font-medium leading-6 text-gray-900">خطاب المراجعة</dt>
                                         <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                            <a v-if="review_letter" :href="review_letter" target="_blank" class="text-orange-500 hover:underline">{{ review_letter }}</a>
+                                            <a v-if="review_letter" :href="reviewLetterUrl" target="_blank" class="text-orange-500 hover:underline">{{ reviewLetterUrl }}</a>
                                             <span v-else>لا يوجد</span>
                                         </dd>
                                     </div>
