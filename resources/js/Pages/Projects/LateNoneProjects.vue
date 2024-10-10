@@ -11,6 +11,7 @@ const props = defineProps({
     projects: Array
 });
 const OWNER_DAYS_FILTER = 60;
+const DAYS_FILTER = 13;
 
 const shallowProjects = [...props.projects].map(project => {
     project.documents_delivery_fulfillment_date = project.documents_delivery_fulfillment_date ? new Date(project.documents_delivery_fulfillment_date) : null;
@@ -63,7 +64,7 @@ const onFilter = (event) => {
             <div class="mx-auto  sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <h1 class="text-3xl font-semibold pb-4">المشروعات متأخرة تسليم الملاحظات (>15 يوم)</h1>
+                        <h1 class="text-3xl font-semibold pb-4">المشروعات متأخرة تسليم الملاحظات (>{{ DAYS_FILTER }} يوم)</h1>
                         <p v-if="!shallowProjects.length" class="text-center mx-auto">
                             لا يوجد أي مشروعات حالياً
                         </p>

@@ -15,30 +15,30 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $randomPassword = Str::random(12);
-        User::factory()->create([
+        User::create([
             'name' => 'د. طارق الشيخ',
             'email' => 'tarek@al-sheikh.org',
             'role' => 'admin',
             'password' => bcrypt($randomPassword),
         ]);
-        echo "User created with email: tarek@al-sheikh.org and password:" . $randomPassword . "\n";
+        echo "User created with email: tarek@al-sheikh.org and password: " . $randomPassword . "\n";
 
         $randomPassword = Str::random(12);
-        User::factory()->create([
+        User::create([
             'name' => 'ل. حسن جابر',
             'email' => 'hgaber@gmail.com',
             'role' => 'admin',
             'password' => bcrypt($randomPassword),
         ]);
-        echo "User created with email: tarek@al-sheikh.org and password:" . $randomPassword . "\n";
+        echo "User created with email: hgaber@gmail.com and password: " . $randomPassword . "\n";
 
         $randomPassword = Str::random(12);
-        User::factory()->create([
+        User::create([
             'name' => 'أحمد دغيدي',
             'email' => 'ahmaddeghady99@gmail.com',
             'role' => 'admin',
             'password' => bcrypt($randomPassword),
         ]);
-        echo "User created with email: ahmaddeghady99@gmail.com and password:" . $randomPassword . "\n";
+        echo "User created with email: ahmaddeghady99@gmail.com and password: " . $randomPassword . "\n";
     }
 }
